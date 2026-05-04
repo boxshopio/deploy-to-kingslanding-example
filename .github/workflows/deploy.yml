@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Deploy to King's Landing
-        uses: boxshopio/deploy-to-kingslanding@v1
+        uses: boxshopio/deploy-to-kingslanding@v2
         with:
           project: example-site
           directory: .
