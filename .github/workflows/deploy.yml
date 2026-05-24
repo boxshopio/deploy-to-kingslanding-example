@@ -12,9 +12,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Inject deploy info into page
+        if: env.KL_DEPLOY_KEY != ''
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
+          SHA: ${{ github.sha }}
+        run: |
+          SHORT_SHA="${SHA:0:7}"
+          TS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          REPLACEMENT="Deploy #${RUN_NUMBER} | ${TS} | <code>${SHORT_SHA}</code>"
+          sed -i "s#<!--DEPLOY_INFO-->#${REPLACEMENT}#" index.html
+
       - name: Deploy to King's Landing
         if: env.KL_DEPLOY_KEY != ''
-        uses: boxshopio/deploy-to-kingslanding@v1
+        uses: boxshopio/deploy-to-kingslanding@v2
         with:
           project: demo
           directory: .
