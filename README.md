@@ -8,16 +8,23 @@ A minimal example showing how to deploy a static site to [King's Landing](https:
 
 Every push to `main` triggers a GitHub Actions workflow that deploys this directory to King's Landing using the [deploy-to-kingslanding](https://github.com/boxshopio/deploy-to-kingslanding) action.
 
-The deploy step is gated on the `KL_DEPLOY_KEY` secret being present:
+The deploy step is gated on the `KL_DEPLOY_KEY` secret being present. The secret is promoted to a job-level `env:` so the step's `if:` can read it (the `secrets` context is not available in step `if:` expressions):
 
 ```yaml
-- name: Deploy to King's Landing
-  if: ${{ secrets.KL_DEPLOY_KEY != '' }}
-  uses: boxshopio/deploy-to-kingslanding@v1
-  with:
-    project: demo
-    directory: .
-    deploy-key: ${{ secrets.KL_DEPLOY_KEY }}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      KL_DEPLOY_KEY: ${{ secrets.KL_DEPLOY_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to King's Landing
+        if: env.KL_DEPLOY_KEY != ''
+        uses: boxshopio/deploy-to-kingslanding@v1
+        with:
+          project: demo
+          directory: .
+          deploy-key: ${{ env.KL_DEPLOY_KEY }}
 ```
 
 If you fork this repo without configuring a deploy key, the workflow will still run successfully — it just skips the deploy step instead of failing.

@@ -7,13 +7,15 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      KL_DEPLOY_KEY: ${{ secrets.KL_DEPLOY_KEY }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Deploy to King's Landing
-        if: ${{ secrets.KL_DEPLOY_KEY != '' }}
+        if: env.KL_DEPLOY_KEY != ''
         uses: boxshopio/deploy-to-kingslanding@v1
         with:
           project: demo
           directory: .
-          deploy-key: ${{ secrets.KL_DEPLOY_KEY }}
+          deploy-key: ${{ env.KL_DEPLOY_KEY }}
