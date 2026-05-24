@@ -11,8 +11,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Deploy to King's Landing
+        if: ${{ secrets.KL_DEPLOY_KEY != '' }}
         uses: boxshopio/deploy-to-kingslanding@v1
         with:
-          project: example-site
+          project: demo
           directory: .
           deploy-key: ${{ secrets.KL_DEPLOY_KEY }}
