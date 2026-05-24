@@ -21,7 +21,7 @@ jobs:
           SHORT_SHA="${SHA:0:7}"
           TS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           REPLACEMENT="Deploy #${RUN_NUMBER} | ${TS} | <code>${SHORT_SHA}</code>"
-          sed -i "s#<!--DEPLOY_INFO-->#${REPLACEMENT}#" index.html
+          sed -i "s@<!--DEPLOY_INFO-->@${REPLACEMENT}@" index.html
 
       - name: Deploy to King's Landing
         if: env.KL_DEPLOY_KEY != ''
